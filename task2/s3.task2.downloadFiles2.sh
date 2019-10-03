@@ -7,6 +7,6 @@ do
   versionId=`aws s3api list-object-versions --bucket ak.staticwebsitetask2 --prefix $val --output text --query "Versions[?LastModified<='$date']|[0].VersionId"`
   if [ $versionId != None ]
   then
-    aws s3api get-object --bucket ak.staticwebsitetask2 --key $val ./$val --version-id $versionId
+    aws s3api get-object --bucket $bucket --key $val ./$val --version-id $versionId
   fi
 done
