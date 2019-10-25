@@ -1,0 +1,36 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Aws mentoring program instance template
+Parameters:
+  StackName:
+    Description: Aws stack name
+    Type: String
+  Subnet:
+    Description: Subnet types
+    Type: String
+    Default: PrivateSubnet1
+    AllowedValues:
+      - PublicSubnet1
+      - PublicSubnet2
+      - PrivateSubnet1
+      - PrivateSubnet2
+      - DataBaseSubnet1
+      - DataBaseSubnet2
+Resources:
+  WebServerInstance:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: t2.micro
+      ImageId: ami-00c03f7f7f2ec15c3
+      NetworkInterfaces:
+        - GroupSet:
+          - Fn::ImportValue: !Sub ${StackName}-SequrityGroupId
+          DeviceIndex: 0
+          DeleteOnTermination: true
+          SubnetId:
+            Fn::ImportValue: !Sub ${StackName}-${Subnet}Id
+Outputs:
+  WebServerInstance:
+    Description: Web server instance
+    Value: !Ref WebServerInstance
+    Export:
+      Name: !Sub ${AWS::StackName}-InstanceId
